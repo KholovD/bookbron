@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kompyuter xonalar boshqaruvi</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Asosiy stillar */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Asosiy konteyner */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Yuqori panel */
+        .top-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .actions-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Tugmalar */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #2196f3;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1976d2;
+            transform: translateY(-2px);
+        }
+
+        /* Ko'rinish tanlash */
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #e3f2fd;
+            color: #1976d2;
+            transition: all 0.3s;
+        }
+
+        .view-btn.active {
+            background: #2196f3;
+            color: white;
+        }
+
+        /* Qidiruv va filtrlar */
+        .filters {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .status-filters {
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .filter-chip.active {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        /* Xonalar ko'rinishi */
+        .floors-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .floor-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .floor-title {
+            font-size: 24px;
+            color: #1976d2;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e3f2fd;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .room-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Kompyuter joylari */
+        .computers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .computer-spot {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .computer-spot.empty {
+            border: 2px dashed #ddd;
+            background: #f8f9fa;
+        }
+
+        .computer-spot.free {
+            background: #e8f5e9;
+            border: 2px solid #43a047;
+        }
+
+        .computer-spot.busy {
+            background: #ffebee;
+            border: 2px solid #e53935;
+        }
+
+        .computer-spot.maintenance {
+            background: #fff3e0;
+            border: 2px solid #fb8c00;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        /* Formalar */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2196f3;
+            outline: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .actions-group,
+            .filters {
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .status-filters {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Yuqori panel -->
+        <div class="top-panel">
+            <!-- Asosiy tugmalar -->
+            <div class="actions-group">
+                <button class="btn btn-primary" onclick="showRoomModal()">
+                    <i class="material-icons">add</i>
+                    Yangi xona
+                </button>
+                <button class="btn btn-primary" onclick="showComputerModal()">
+                    <i class="material-icons">computer</i>
+                    Yangi kompyuter
+                </button>
+            </div>
+
+            <!-- Ko'rinish tanlash -->
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="switchView('grid')">
+                    <i class="material-icons">grid_view</i>
+                    Jadval
+                </button>
+                <button class="view-btn" onclick="switchView('map')">
+                    <i class="material-icons">map</i>
+                    Xarita
+                </button>
+            </div>
+
+            <!-- Qidiruv va filtrlar -->
+            <div class="filters">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Qidirish...">
+                    <i class="material-icons">search</i>
+                </div>
+                <div class="status-filters">
+                    <div class="filter-chip active" data-status="FREE">
+                        <i class="material-icons">check_circle</i>
+                        Bo'sh
+                    </div>
+                    <div class="filter-chip active" data-status="BUSY">
+                        <i class="material-icons">schedule</i>
+                        Band
+                    </div>
+                    <div class="filter-chip active" data-status="MAINTENANCE">
+                        <i class="material-icons">build</i>
+                        Ta'mirda
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asosiy kontent -->
+        <div id="mainContent"></div>
+    </div>
+
+    <!-- Xona qo'shish modali -->
+    <div class="modal" id="roomModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="roomModalTitle">Yangi xona qo'shish</h2>
+                <span class="close-modal" onclick="closeModal('roomModal')">&times;</span>
+            </div>
+            <form id="roomForm" onsubmit="handleRoomSubmit(event)">
+                <div class="form-group">
+                    <label>Xona nomi:</label>
+                    <input type="text" id="roomName" required placeholder="Masalan: Dasturlash xonasi">
+                </div>
+                <div class="form-group">
+                    <label>Xona raqami:</label>
+                    <input type="number" id="roomNumber" required min="1">
+                </div>
+                <div class="form-group">
+                    <label>Qavat:</label>
+                    <input type="number" id="roomFloor" required min="1">
+                </div>
+                <div class="form-group">
+                    <label>Sig'imi (kompyuterlar soni):</label>
+                    <input type="number" id="roomCapacity" required min="1">
+                </div>
+                <button type="submit" class="btn btn-primary">Saqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Kompyuter qo'shish modali -->
+    <div class="modal" id="computerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="computerModalTitle">Yangi kompyuter</h2>
+                <span class="close-modal" onclick="closeModal('computerModal')">&times;</span>
+            </div>
+            <form id="computerForm" onsubmit="handleComputerSubmit(event)">
+                <div class="form-group">
+                    <label>Kompyuter nomi:</label>
+                    <input type="text" id="computerName" required 
+                           placeholder="Masalan: PC-01" pattern="^PC-\d{2}$"
+                           title="Format: PC-01, PC-02, ...">
+                </div>
+                <div class="form-group">
+                    <label>Xona:</label>
+                    <select id="computerRoom" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Turi:</label>
+                    <select id="computerType" required onchange="updatePriceByType()">
+                        <option value="basic">Oddiy</option>
+                        <option value="gaming">O'yin uchun</option>
+                        <option value="professional">Professional</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Soatlik narx:</label>
+                    <input type="number" id="computerPrice" required min="1000" step="1000">
+                </div>
+                <div class="form-group">
+                    <label>Qo'shimcha jihozlar:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="extras" value="headset"> Quloqchin
+                        </label>
+                        <label>
+                            <input type="checkbox" name="extras" value="webcam"> Veb-kamera
+                        </label>
+                        <label>
+                            <input type="checkbox" name="extras" value="printer"> Printer
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Saqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    // ================ GLOBAL O'ZGARUVCHILAR ================
+    let rooms = [];
+    let computers = [];
+    let currentView = 'grid';
+    let selectedFilters = ['FREE', 'BUSY', 'MAINTENANCE'];
+
+    // Kompyuter turlari va narxlari
+    const COMPUTER_TYPES = {
+        basic: { name: 'Oddiy', basePrice: 5000 },
+        gaming: { name: "O'yin uchun", basePrice: 10000 },
+        professional: { name: 'Professional', basePrice: 15000 }
+    };
+
+    // ================ SAHIFA YUKLANGANDA ================
+    document.addEventListener('DOMContentLoaded', () => {
+        loadData();
+        setupEventListeners();
+        renderContent();
+    });
+
+    // ================ EVENT LISTENER'LAR ================
+    function setupEventListeners() {
+        // Qidiruv
+        document.getElementById('searchInput').addEventListener('input', filterContent);
+        
+        // Status filtrlari
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                chip.classList.toggle('active');
+                selectedFilters = Array.from(document.querySelectorAll('.filter-chip.active'))
+                    .map(activeChip => activeChip.dataset.status);
+                renderContent();
+            });
+        });
+    }
+
+    // ================ XONA FUNKSIYALARI ================
+    function showRoomModal() {
+        const form = document.getElementById('roomForm');
+        form.reset();
+        document.getElementById('roomModalTitle').textContent = 'Yangi xona qo\'shish';
+        document.getElementById('roomModal').style.display = 'flex';
+    }
+
+    function handleRoomSubmit(event) {
+        event.preventDefault();
+        
+        try {
+            const formData = {
+                name: document.getElementById('roomName').value.trim(),
+                number: parseInt(document.getElementById('roomNumber').value),
+                floor: parseInt(document.getElementById('roomFloor').value),
+                capacity: parseInt(document.getElementById('roomCapacity').value)
+            };
+
+            // Validatsiya
+            if (!formData.number || !formData.floor || !formData.capacity) {
+                showAlert("Barcha maydonlarni to'ldiring!", 'error');
+                return;
+            }
+
+            // Xona raqami va qavat takrorlanishini tekshirish
+            const roomExists = rooms.some(room => 
+                room.number === formData.number && 
+                room.floor === formData.floor
+            );
+
+            if (roomExists) {
+                showAlert(`${formData.floor}-qavatda ${formData.number}-xona mavjud!`, 'error');
+                return;
+            }
+
+            // Yangi xona qo'shish
+            const newRoom = {
+                id: Date.now(),
+                created: new Date().toISOString(),
+                ...formData
+            };
+
+            rooms.push(newRoom);
+            saveData();
+            closeModal('roomModal');
+            renderContent();
+            showAlert('Yangi xona muvaffaqiyatli qo\'shildi!', 'success');
+            
+        } catch (error) {
+            console.error('Xona qo\'shishda xatolik:', error);
+            showAlert('Xatolik yuz berdi', 'error');
+        }
+    }
+
+    // ================ KOMPYUTER FUNKSIYALARI ================
+    function showComputerModal(roomId = null) {
+        if (rooms.length === 0) {
+            showAlert('Avval xona yarating!', 'warning');
+            return;
+        }
+
+        const form = document.getElementById('computerForm');
+        form.reset();
+        
+        // Xonalar ro'yxatini to'ldirish
+        const roomSelect = document.getElementById('computerRoom');
+        roomSelect.innerHTML = rooms.map(room => {
+            const computersInRoom = computers.filter(pc => pc.roomId === room.id).length;
+            const isDisabled = computersInRoom >= room.capacity;
+            return `
+                <option value="${room.id}" 
+                        ${isDisabled ? 'disabled' : ''} 
+                        ${roomId === room.id ? 'selected' : ''}>
+                    ${room.floor}-qavat, ${room.number}-xona (${computersInRoom}/${room.capacity})
+                </option>
+            `;
+        }).join('');
+
+        updatePriceByType();
+        document.getElementById('computerModal').style.display = 'flex';
+    }
+
+    function handleComputerSubmit(event) {
+        event.preventDefault();
+        
+        try {
+            const formData = {
+                name: document.getElementById('computerName').value,
+                roomId: parseInt(document.getElementById('computerRoom').value),
+                type: document.getElementById('computerType').value,
+                price: parseInt(document.getElementById('computerPrice').value),
+                extras: Array.from(document.querySelectorAll('input[name="extras"]:checked'))
+                    .map(cb => cb.value)
+            };
+
+            // Validatsiya
+            if (!formData.name.match(/^PC-\d{2}$/)) {
+                showAlert("Kompyuter nomi formati noto'g'ri (PC-01 formatida bo'lishi kerak)", "error");
+                return;
+            }
+
+            // Kompyuter nomi takrorlanishini tekshirish
+            if (computers.some(pc => pc.name === formData.name)) {
+                showAlert('Bu nomdagi kompyuter mavjud!', 'error');
+                return;
+            }
+
+            // Xonada joy borligini tekshirish
+            const room = rooms.find(r => r.id === formData.roomId);
+            const computersInRoom = computers.filter(pc => pc.roomId === formData.roomId).length;
+            if (computersInRoom >= room.capacity) {
+                showAlert('Xonada bosh joy yoq!', 'error');
+                return;
+            }
+
+            // Yangi kompyuter qoshish
+            const newComputer = {
+                id: Date.now(),
+                status: 'FREE',
+                created: new Date().toISOString(),
+                ...formData
+            };
+
+            computers.push(newComputer);
+            saveData();
+            closeModal('computerModal');
+            renderContent();
+            showAlert('Yangi kompyuter muvaffaqiyatli qo'shildi!', 'success');
+            
+        } catch (error) {
+            console.error('Kompyuter qo'shishda xatolik:', error);
+            showAlert('Xatolik yuz berdi', 'error');
+        }
+    }
+
+    // ================ KO'RINISH FUNKSIYALARI ================
+    function switchView(view) {
+        currentView = view;
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.onclick.toString().includes(view));
+        });
+        renderContent();
+    }
+
+    function renderContent() {
+        const container = document.getElementById('mainContent');
+        if (currentView === 'grid') {
+            renderGridView(container);
+        } else {
+            renderMapView(container);
+        }
+    }
+
+    function renderGridView(container) {
+        if (rooms.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="material-icons">room</i>
+                    <h3>Xonalar mavjud emas</h3>
+                    <p>Yangi xona qo'shish uchun yuqoridagi tugmani bosing</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Xonalarni qavatlar bo'yicha guruhlash
+        const floorGroups = rooms.reduce((groups, room) => {
+            if (!groups[room.floor]) groups[room.floor] = [];
+            groups[room.floor].push(room);
+            return groups;
+        }, {});
+
+        container.innerHTML = `
+            <div class="floors-container">
+                ${Object.entries(floorGroups)
+                    .sort(([a], [b]) => a - b)
+                    .map(([floor, rooms]) => renderFloorSection(floor, rooms))
+                    .join('')}
+            </div>
+        `;
+    }
+
+    // ================ YORDAMCHI FUNKSIYALAR ================
+    function saveData() {
+        localStorage.setItem('rooms', JSON.stringify(rooms));
+        localStorage.setItem('computers', JSON.stringify(computers));
+    }
+
+    function loadData() {
+        const savedRooms = localStorage.getItem('rooms');
+        const savedComputers = localStorage.getItem('computers');
+        
+        if (savedRooms) rooms = JSON.parse(savedRooms);
+        if (savedComputers) computers = JSON.parse(savedComputers);
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    function updatePriceByType() {
+        const type = document.getElementById('computerType').value;
+        const priceInput = document.getElementById('computerPrice');
+        priceInput.value = COMPUTER_TYPES[type].basePrice;
+        priceInput.min = COMPUTER_TYPES[type].basePrice;
+    }
+
+    function showAlert(message, type = 'info') {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.textContent = message;
+        
+        document.body.appendChild(alertDiv);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 3000);
+    }
+
+    // Drag-and-drop funksiyalari
+    function dragStart(event) {
+        event.dataTransfer.setData('computerId', event.target.dataset.computerId);
+        event.target.classList.add('dragging');
+    }
+
+    function dragEnd(event) {
+        event.target.classList.remove('dragging');
+    }
+
+    function dragOver(event) {
+        event.preventDefault();
+        if (!event.target.classList.contains('computer-spot')) return;
+        event.target.classList.add('can-drop');
+    }
+
+    function dragLeave(event) {
+        if (!event.target.classList.contains('computer-spot')) return;
+        event.target.classList.remove('can-drop');
+    }
+
+    function drop(event) {
+        event.preventDefault();
+        const computerId = parseInt(event.dataTransfer.getData('computerId'));
+        const targetRoomId = parseInt(event.target.dataset.roomId);
+        
+        if (!computerId || !targetRoomId) return;
+        
+        moveComputer(computerId, targetRoomId);
+        event.target.classList.remove('can-drop');
+    }
+
+    function moveComputer(computerId, targetRoomId) {
+        const computer = computers.find(pc => pc.id === computerId);
+        const targetRoom = rooms.find(r => r.id === targetRoomId);
+        
+        if (!computer || !targetRoom) return;
+        
+        const computersInTargetRoom = computers.filter(pc => pc.roomId === targetRoomId).length;
+        
+        if (computersInTargetRoom >= targetRoom.capacity) {
+            showAlert('Xonada bo'sh joy yo'q!', 'error');
+            return;
+        }
+        
+        computer.roomId = targetRoomId;
+        saveData();
+        renderContent();
+        showAlert('Kompyuter muvaffaqiyatli ko'chirildi!', 'success');
+    }
+
+    // CSS stillarini qo'shish
+    const alertStyles = `
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .alert-success { background: #4caf50; }
+        .alert-error { background: #f44336; }
+        .alert-warning { background: #ff9800; }
+        .alert-info { background: #2196f3; }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    `;
+
+    const style = document.createElement('style');
+    style.textContent = alertStyles;
+    document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruxsatlar boshqaruvi - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/navigation.css">
+    
+    <style>
+        /* ... Previous styles ... */
+
+        .permissions-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .roles-sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .role-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .role-item {
+            padding: 12px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .role-item::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.2) 50%,
+                rgba(255,255,255,0) 100%);
+            transition: left 0.5s ease;
+        }
+
+        .role-item:hover::after {
+            left: 100%;
+        }
+
+        .role-item.active {
+            background: #1a237e;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .permissions-main {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+
+        .permissions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .permission-group {
+            margin-bottom: 30px;
+        }
+
+        .group-header {
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #1a237e;
+        }
+
+        .permission-item {
+            transform: translateX(-20px);
+            opacity: 0;
+            animation: slideIn 0.3s forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .permission-checkbox {
+            margin-right: 10px;
+        }
+
+        .permission-info {
+            flex: 1;
+        }
+
+        .permission-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .permission-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Switch styles */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: all 0.3s ease;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #1a237e;
+            box-shadow: 0 0 10px rgba(26, 35, 126, 0.3);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Loading animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #1a237e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading indicator -->
+    <div class="loading" id="loadingIndicator">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- ... Previous sidebar content ... -->
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <div class="header">
+            <div class="navigation-buttons">
+                <button class="btn btn-secondary nav-btn" onclick="goBack()">
+                    <i class="material-icons">arrow_back</i>
+                    <span>Orqaga</span>
+                </button>
+                <button class="btn btn-primary nav-btn" onclick="goHome()">
+                    <i class="material-icons">home</i>
+                    <span>Bosh sahifa</span>
+                </button>
+                <button class="btn btn-info nav-btn" onclick="refreshPage()">
+                    <i class="material-icons refresh-icon">refresh</i>
+                    <span>Yangilash</span>
+                </button>
+            </div>
+            <h1>Ruxsatlar</h1>
+        </div>
+
+        <div class="permissions-container">
+            <!-- Roles Sidebar -->
+            <div class="roles-sidebar">
+                <h2>Rollar</h2>
+                <ul class="role-list" id="roleList">
+                    <!-- JavaScript bilan to'ldiriladi -->
+                </ul>
+            </div>
+
+            <!-- Permissions Main -->
+            <div class="permissions-main">
+                <div class="permissions-header">
+                    <h2 id="selectedRoleName">Admin ruxsatlari</h2>
+                    <div class="role-actions">
+                        <button class="btn btn-warning" onclick="editRole()">
+                            <i class="material-icons">edit</i>
+                            Tahrirlash
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteRole()">
+                            <i class="material-icons">delete</i>
+                            O'chirish
+                        </button>
+                    </div>
+                </div>
+
+                <div id="permissionsContent">
+                    <!-- Foydalanuvchilar -->
+                    <div class="permission-group">
+                        <h3 class="group-header">Foydalanuvchilar</h3>
+                        <div class="permission-item">
+                            <label class="switch">
+                                <input type="checkbox" onchange="updatePermission('users.view')">
+                                <span class="slider"></span>
+                            </label>
+                            <div class="permission-info">
+                                <div class="permission-name">Ko'rish</div>
+                                <div class="permission-description">
+                                    Foydalanuvchilar ro'yxatini ko'rish
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Boshqa ruxsatlar -->
+                    </div>
+
+                    <!-- Kompyuterlar -->
+                    <div class="permission-group">
+                        <h3 class="group-header">Kompyuterlar</h3>
+                        <div class="permission-item">
+                            <label class="switch">
+                                <input type="checkbox" onchange="updatePermission('computers.manage')">
+                                <span class="slider"></span>
+                            </label>
+                            <div class="permission-info">
+                                <div class="permission-name">Boshqarish</div>
+                                <div class="permission-description">
+                                    Kompyuterlarni qo'shish, tahrirlash va o'chirish
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Boshqa ruxsatlar -->
+                    </div>
+
+                    <!-- To'lovlar -->
+                    <div class="permission-group">
+                        <h3 class="group-header">To'lovlar</h3>
+                        <div class="permission-item">
+                            <label class="switch">
+                                <input type="checkbox" onchange="updatePermission('payments.view')">
+                                <span class="slider"></span>
+                            </label>
+                            <div class="permission-info">
+                                <div class="permission-name">Ko'rish</div>
+                                <div class="permission-description">
+                                    To'lovlar tarixini ko'rish
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Boshqa ruxsatlar -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/navigation.js"></script>
+    <script>
+        let selectedRoleId = null;
+
+        // Loading ko'rsatish
+        function showLoading() {
+            document.getElementById('loadingIndicator').classList.add('active');
+        }
+
+        // Loading yashirish
+        function hideLoading() {
+            document.getElementById('loadingIndicator').classList.remove('active');
+        }
+
+        // Rollarni olish
+        async function fetchRoles() {
+            showLoading();
+            try {
+                const response = await fetch('/api/admin/roles', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Rollar ma\'lumotlarini olishda xatolik');
+                }
+
+                const roles = await response.json();
+                renderRoles(roles);
+            } catch (error) {
+                console.error('Xatolik:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Rollarni ko'rsatish
+        function renderRoles(roles) {
+            const roleList = document.getElementById('roleList');
+            roleList.innerHTML = roles.map((role, index) => `
+                <li class="role-item ${role.id === selectedRoleId ? 'active' : ''}"
+                    onclick="selectRole(${role.id})"
+                    style="animation: fadeInUp ${0.1 * (index + 1)}s forwards">
+                    ${role.name}
+                </li>
+            `).join('');
+        }
+
+        // Rolni tanlash
+        async function selectRole(roleId) {
+            selectedRoleId = roleId;
+            document.querySelectorAll('.role-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[onclick="selectRole(${roleId})"]`)
+                .classList.add('active');
+
+            await fetchRolePermissions(roleId);
+        }
+
+        // Rol ruxsatlarini olish
+        async function fetchRolePermissions(roleId) {
+            try {
+                const response = await fetch(`/api/admin/roles/${roleId}/permissions`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Ruxsatlar ma\'lumotlarini olishda xatolik');
+                }
+
+                const permissions = await response.json();
+                updatePermissionsView(permissions);
+            } catch (error) {
+                console.error('Xatolik:', error);
+            }
+        }
+
+        // Ruxsatni yangilash
+        async function updatePermission(permission) {
+            try {
+                const response = await fetch(
+                    `/api/admin/roles/${selectedRoleId}/permissions`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        permission,
+                        enabled: event.target.checked
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Ruxsatni yangilashda xatolik');
+                }
+            } catch (error) {
+                console.error('Xatolik:', error);
+                event.target.checked = !event.target.checked;
+            }
+        }
+
+        // Sahifa yuklanganda
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchRoles();
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ro'yxatdan o'tish - BookBron</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link rel="stylesheet" href="../../public/css/styles.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e88e5, #1565c0);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .register-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #1565c0;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .register-footer {
+            margin-top: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .register-footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: rgba(255, 59, 48, 0.1);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .password-requirements {
+            color: white;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .register-container {
+                padding: 20px;
+            }
+
+            .register-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .phone-input {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .phone-prefix {
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.05);
+            color: #666;
+            font-weight: 500;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .phone-input input {
+            flex: 1;
+            border: none;
+            border-radius: 0;
+            padding-left: 10px;
+            background: transparent;
+        }
+
+        .phone-input input:focus {
+            box-shadow: none;
+        }
+
+        .phone-input:focus-within {
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-header">
+            <h1>BookBron</h1>
+            <p>Ro'yxatdan o'tish</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="registerForm" onsubmit="return handleRegister(event)">
+            <div class="form-group">
+                <label for="name">
+                    <i class="material-icons">person</i>
+                    To'liq ism
+                </label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Ismingizni kiriting">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">
+                    <i class="material-icons">phone</i>
+                    Telefon raqam
+                </label>
+                <div class="phone-input">
+                    <span class="phone-prefix">+998</span>
+                    <input type="tel" id="phone" name="phone" required 
+                           pattern="[0-9]{9}"
+                           maxlength="12"
+                           placeholder="90 123 45 67"
+                           oninput="formatPhoneNumber(this)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    <i class="material-icons">lock</i>
+                    Parol
+                </label>
+                <div class="password-input">
+                    <input type="password" id="password" name="password" required 
+                           placeholder="Yangi parol">
+                    <i class="material-icons toggle-password" onclick="togglePassword('password')">visibility_off</i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">
+                    <i class="material-icons">lock_outline</i>
+                    Parolni tasdiqlang
+                </label>
+                <div class="password-input">
+                    <input type="password" id="confirmPassword" name="confirmPassword" required 
+                           placeholder="Parolni qayta kiriting">
+                    <i class="material-icons toggle-password" onclick="togglePassword('confirmPassword')">visibility_off</i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="g-recaptcha" 
+                     data-sitekey="YOUR_SITE_KEY"
+                     data-theme="dark"
+                     data-callback="onCaptchaSuccess"
+                     data-expired-callback="onCaptchaExpired"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="registerButton" disabled>Ro'yxatdan o'tish</button>
+        </form>
+
+        <div class="register-footer">
+            <p>Hisobingiz bormi? <a href="../login/login.html">Kirish</a></p>
+        </div>
+    </div>
+
+    <script>
+        let isCaptchaVerified = false;
+
+        function onCaptchaSuccess() {
+            isCaptchaVerified = true;
+            document.getElementById('registerButton').disabled = false;
+        }
+
+        function onCaptchaExpired() {
+            isCaptchaVerified = false;
+            document.getElementById('registerButton').disabled = true;
+        }
+
+        function togglePassword(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = passwordInput.nextElementSibling;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.textContent = 'visibility';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.textContent = 'visibility_off';
+            }
+        }
+
+        function formatPhoneNumber(input) {
+            // Faqat raqamlarni qoldirish
+            let value = input.value.replace(/\D/g, '');
+            
+            // Maksimal 9 ta raqam
+            if (value.length > 9) {
+                value = value.slice(0, 9);
+            }
+            
+            // Format: XX XXX XX XX
+            if (value.length >= 2) {
+                value = value.slice(0, 2) + ' ' + value.slice(2);
+            }
+            if (value.length >= 6) {
+                value = value.slice(0, 6) + ' ' + value.slice(6);
+            }
+            if (value.length >= 9) {
+                value = value.slice(0, 9) + ' ' + value.slice(9);
+            }
+            
+            input.value = value.trim();
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            if (!isCaptchaVerified) {
+                showError('Iltimos, captchani tasdiqlang');
+                return false;
+            }
+
+            const name = document.getElementById('name').value;
+            const phone = '+998' + document.getElementById('phone').value.replace(/\D/g, '');
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const captchaResponse = grecaptcha.getResponse();
+
+            if (password !== confirmPassword) {
+                showError('Parollar mos kelmadi');
+                return false;
+            }
+
+            // Telefon raqam validatsiyasi
+            if (!/^\+998[0-9]{9}$/.test(phone)) {
+                showError('Noto\'g\'ri telefon raqam formati');
+                return false;
+            }
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        name,
+                        phone, 
+                        password,
+                        captchaResponse 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.href = '../login/login.html?registered=true';
+                } else {
+                    showError(data.message);
+                }
+            } catch (error) {
+                showError('Server bilan bog\'lanishda xatolik');
+            }
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.style.display = 'block';
+            errorMessage.textContent = message;
+            grecaptcha.reset();
+            isCaptchaVerified = false;
+            document.getElementById('registerButton').disabled = true;
+        }
+    </script>
+</body>
+</html> 

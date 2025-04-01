@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: internetcafe-app
+  namespace: production
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: internetcafe
+  template:
+    metadata:
+      labels:
+        app: internetcafe
+    spec:
+      containers:
+      - name: internetcafe
+        image: ${ECR_REGISTRY}/internetcafe:${IMAGE_TAG}
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        env:
+        - name: NODE_ENV
+          value: production
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: host
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: password 

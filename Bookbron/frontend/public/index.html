@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookBron - Kompyuter klub boshqaruv tizimi</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e88e5, #1565c0);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #1565c0;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        /* Features section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Stats section */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            opacity: 0.8;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats {
+                flex-direction: column;
+            }
+
+            .stat-card {
+                width: 100%;
+            }
+        }
+
+        /* Tablet moslashuv */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                padding: 15px;
+                margin: 0 20px;
+            }
+
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Kichik ekranlar uchun orientation fix */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero {
+                padding: 20px 0;
+            }
+
+            .features {
+                margin: 20px 0;
+            }
+
+            .stat-card {
+                padding: 10px;
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) {
+            .feature-card::before,
+            .feature-card::after,
+            .btn::before,
+            .btn::after {
+                display: none;
+            }
+
+            .feature-card,
+            .btn,
+            .nav-link {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .touch-feedback {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .touch-feedback::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(255, 255, 255, 0.1);
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+
+            .touch-feedback:active::after {
+                opacity: 1;
+            }
+        }
+
+        /* High-DPI screen optimizations */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .feature-card,
+            .btn,
+            .stat-card {
+                border-width: 0.5px;
+            }
+
+            body {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+        }
+
+        .dashboard-stats {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .dashboard-stats .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animated background */
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, #1e88e5, #1565c0);
+            overflow: hidden;
+        }
+
+        .animated-background::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 60%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1.5); }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+
+        /* Hero section animations */
+        .hero h1 {
+            animation: slideUp 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        .hero p {
+            animation: slideUp 1s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .hero button {
+            animation: slideUp 1s ease-out 0.6s forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Feature cards hover effect */
+        .feature-card {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) rotateX(10deg);
+        }
+
+        .feature-icon {
+            transition: all 0.5s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: translateZ(20px) scale(1.2);
+            color: #4fc3f7;
+        }
+
+        /* Stats cards animation */
+        .stat-card {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.8s; }
+        .stat-card:nth-child(2) { animation-delay: 1s; }
+        .stat-card:nth-child(3) { animation-delay: 1.2s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Glowing effect */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: glow 3s linear infinite;
+        }
+
+        @keyframes glow {
+            0% { transform: rotate(45deg) translateX(-100%); }
+            100% { transform: rotate(45deg) translateX(100%); }
+        }
+
+        /* Dashboard stats animation */
+        .dashboard-stats {
+            transform-style: preserve-3d;
+            animation: slideIn 1s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100px) rotateY(-30deg);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) rotateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1565c0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-circle {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Yangi 3D parallax effekt */
+        .parallax-container {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+
+        .layer-1 { transform: translateZ(-100px) scale(1.5); }
+        .layer-2 { transform: translateZ(-50px) scale(1.25); }
+        .layer-3 { transform: translateZ(0) scale(1); }
+
+        /* Yangi neon effekt */
+        .neon-text {
+            color: #fff;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #0ff,
+                0 0 40px #0ff,
+                0 0 80px #0ff;
+            animation: neonPulse 2s infinite;
+        }
+
+        @keyframes neonPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Yangi cursor effekt */
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-trail {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        .trail {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        /* Yangi wave animatsiya */
+        .wave-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+        .wave {
+            position: relative;
+            width: 200%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%23003F7C'/%3E%3C/svg%3E");
+            animation: wave 25s linear infinite;
+            transform: translate3d(0, 0, 0);
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-25%); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Yangi hover effekt */
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--x) var(--y), 
+                                      rgba(255,255,255,0.2) 0%,
+                                      transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Yangi statistika animatsiya */
+        .stat-value {
+            position: relative;
+            display: inline-block;
+        }
+
+        .stat-value::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+            transform: scaleX(0);
+            animation: statLine 2s ease-in-out infinite;
+        }
+
+        @keyframes statLine {
+            0% { transform: scaleX(0); }
+            50% { transform: scaleX(1); }
+            100% { transform: scaleX(0); }
+        }
+
+        /* Yangi button hover effekt */
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s;
+        }
+
+        .btn:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Yangi 3D card flip effekt */
+        .feature-card {
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+
+        .feature-card:hover {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Yangi floating animation */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Yangi glitch effekt */
+        .glitch {
+            position: relative;
+            animation: glitch 1s linear infinite;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            text-shadow: 1px 0 blue;
+            top: 0;
+            overflow: hidden;
+            clip: rect(0, 900px, 0, 0);
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 red;
+            animation: noise-1 2s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 green;
+            animation: noise-2 3s infinite linear alternate-reverse;
+        }
+        @keyframes noise-1 {
+            0%, 20%, 40%, 60%, 70%, 90% {clip: rect(44px, 450px, 56px, 0);}
+            10%, 30%, 50%, 80%, 100% {clip: rect(0, 450px, 0, 0);}
+        }
+        @keyframes noise-2 {
+            0%, 20%, 40%, 60%, 70%, 90% {clip: rect(44px, 450px, 56px, 0);}
+            10%, 30%, 50%, 80%, 100% {clip: rect(0, 450px, 0, 0);}
+        }
+
+        /* Yangi shine effekt */
+        .shine {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shine::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 45%,
+                rgba(255, 255, 255, 0.1) 50%,
+                transparent 55%
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        /* Yangi pulse effekt */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Yangi typing effekt */
+        .typing {
+            width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 4s steps(40) infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        /* Yangi spotlight effekt */
+        .spotlight {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spotlight::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at var(--x) var(--y),
+                rgba(255, 255, 255, 0.3) 0%,
+                transparent 50%
+            );
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .spotlight:hover::before {
+            opacity: 1;
+        }
+
+        /* Yangi smoke effekt */
+        .smoke {
+            position: relative;
+        }
+
+        .smoke::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(255, 255, 255, 0.3) 0%,
+                transparent 70%
+            );
+            top: -50%;
+            left: -50%;
+            animation: smoke 20s infinite;
+        }
+
+        @keyframes smoke {
+            0% { transform: rotate(0deg) scale(1); opacity: 0; }
+            50% { transform: rotate(180deg) scale(1.5); opacity: 0.5; }
+            100% { transform: rotate(360deg) scale(1); opacity: 0; }
+        }
+
+        /* Yangi holographic effekt */
+        .holographic {
+            background: linear-gradient(
+                135deg,
+                rgba(255,255,255,0.1),
+                rgba(255,255,255,0.3) 25%,
+                rgba(255,255,255,0.1) 50%,
+                rgba(255,255,255,0.3) 75%,
+                rgba(255,255,255,0.1)
+            );
+            position: relative;
+            overflow: hidden;
+        }
+
+        .holographic::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(
+                circle,
+                transparent 30%,
+                rgba(255,255,255,0.2) 50%,
+                transparent 70%
+            );
+            animation: holographicRotate 10s linear infinite;
+        }
+
+        @keyframes holographicRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Yangi lightning effekt */
+        .lightning {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lightning::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            clip-path: polygon(
+                40% 0%, 60% 0%, 60% 100%, 40% 100%
+            );
+            opacity: 0;
+        }
+
+        .lightning:hover::before {
+            animation: lightning 1s ease-out;
+        }
+
+        @keyframes lightning {
+            0%, 5% { opacity: 0.8; transform: scaleX(1); }
+            6%, 100% { opacity: 0; transform: scaleX(1.2); }
+        }
+
+        /* Yangi matrix rain effekt */
+        .matrix-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .matrix-character {
+            position: absolute;
+            color: #0f0;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1;
+            animation: matrixFall linear infinite;
+        }
+
+        @keyframes matrixFall {
+            0% { transform: translateY(-100%); opacity: 1; }
+            95% { opacity: 1; }
+            100% { transform: translateY(1000%); opacity: 0; }
+        }
+
+        /* Yangi aurora effekt */
+        .aurora {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .aurora::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: linear-gradient(
+                45deg,
+                rgba(255,0,255,0.1),
+                rgba(0,255,255,0.1),
+                rgba(0,255,0,0.1),
+                rgba(255,255,0,0.1)
+            );
+            animation: auroraShift 10s linear infinite;
+            transform-origin: center;
+        }
+
+        @keyframes auroraShift {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Yangi ripple effekt */
+        .ripple-button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+
+        @keyframes ripple {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* Yangi magnetic effekt */
+        .magnetic {
+            transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+
+        /* Asosiy ranglar uchun o'zgaruvchilar */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #1e88e5, #1565c0);
+            --text-primary: #333333;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --btn-secondary-bg: rgba(255, 255, 255, 0.1);
+            --btn-primary-bg: white;
+            --btn-primary-text: #1565c0;
+        }
+
+        /* Tungi rejim ranglari */
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-gradient: linear-gradient(135deg, #0d47a1, #1a237e);
+            --text-primary: #ffffff;
+            --card-bg: rgba(0, 0, 0, 0.2);
+            --btn-secondary-bg: rgba(0, 0, 0, 0.2);
+            --btn-primary-bg: #1565c0;
+            --btn-primary-text: white;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+        }
+
+        .btn-secondary {
+            background: var(--btn-secondary-bg);
+        }
+
+        .btn-primary {
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+        }
+
+        /* Theme toggle tugmasi uchun styles */
+        #themeToggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #themeToggle .material-icons {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        #themeToggle:hover .material-icons {
+            transform: rotate(30deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading screen -->
+    <div class="loading" id="loading">
+        <div class="loading-circle"></div>
+    </div>
+
+    <!-- Animated background -->
+    <div class="animated-background"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">BookBron</div>
+            <div class="nav-buttons">
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="material-icons" id="themeIcon">light_mode</i>
+                </button>
+                <a href="/Bookbron/frontend/auth/login/login.html" class="btn btn-secondary">Kirish</a>
+                <a href="/Bookbron/frontend/auth/register/register.html" class="btn btn-primary">Ro'yxatdan o'tish</a>
+            </div>
+        </header>
+
+        <!-- Hero section -->
+        <section class="hero">
+            <h1>Kompyuter klubingizni oson boshqaring</h1>
+            <p>Zamonaviy yechim bilan biznesingizni avtomatlashtiring</p>
+            <button class="btn btn-primary" onclick="window.location.href='/Bookbron/frontend/auth/register/register.html'">Boshlash</button>
+        </section>
+
+        <!-- Features -->
+        <section class="features">
+            <div class="feature-card">
+                <i class="material-icons feature-icon">computer</i>
+                <h3 class="feature-title">Kompyuterlar monitoringi</h3>
+                <p class="feature-description">Barcha kompyuterlar holatini real vaqtda kuzating</p>
+            </div>
+            <div class="feature-card">
+                <i class="material-icons feature-icon">schedule</i>
+                <h3 class="feature-title">Band qilish tizimi</h3>
+                <p class="feature-description">Onlayn band qilish va navbat boshqaruvi</p>
+            </div>
+            <div class="feature-card">
+                <i class="material-icons feature-icon">payments</i>
+                <h3 class="feature-title">To'lov tizimi</h3>
+                <p class="feature-description">To'lovlarni avtomatik hisoblash va nazorat qilish Payme Click Uzumbank</p>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-value">1000+</div>
+                <div class="stat-label">Foydalanuvchilar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">50+</div>
+                <div class="stat-label">Kompyuter klublar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">24/7</div>
+                <div class="stat-label">Qo'llab-quvvatlash</div>
+            </div>
+        </section>
+        
+
+        <!-- User Dashboard Stats (visible only after login) -->
+        <section class="dashboard-stats" id="userDashboard" style="display: none;">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value" id="busyComputers">0</div>
+                    <div class="stat-label">Band kompyuterlar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="availableComputers">0</div>
+                    <div class="stat-label">Bo'sh kompyuterlar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRooms">0</div>
+                    <div class="stat-label">Xonalar soni</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalComputers">0</div>
+                    <div class="stat-label">Jami kompyuterlar</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 NetZamin. Barcha huquqlar himoyalangan.</p>
+            <p>&copy; Created by Dkholov.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Create particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                container.appendChild(particle);
+            }
+        }
+
+        // Page load animation
+        window.addEventListener('load', () => {
+            createParticles();
+            
+            setTimeout(() => {
+                document.getElementById('loading').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .stat-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Check if user is logged in
+        function checkUserLogin() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                document.getElementById('userDashboard').style.display = 'block';
+                updateDashboardStats();
+            }
+        }
+
+        // Update dashboard statistics
+        async function updateDashboardStats() {
+            try {
+                const response = await fetch('/api/dashboard/stats', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Server xatosi');
+                }
+                
+                const data = await response.json();
+                
+                document.getElementById('busyComputers').textContent = data?.busyComputers || 0;
+                document.getElementById('availableComputers').textContent = data?.availableComputers || 0;
+                document.getElementById('totalRooms').textContent = data?.totalRooms || 0;
+                document.getElementById('totalComputers').textContent = data?.totalComputers || 0;
+            } catch (error) {
+                console.error('Dashboard statistikasini olishda xatolik:', error);
+            }
+        }
+
+        // Initialize dashboard if user is logged in
+        document.addEventListener('DOMContentLoaded', checkUserLogin);
+
+        // Cursor effekt
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.createElement('div');
+            cursor.className = 'custom-cursor';
+            document.body.appendChild(cursor);
+
+            const trailContainer = document.createElement('div');
+            trailContainer.className = 'cursor-trail';
+            document.body.appendChild(trailContainer);
+
+            const trails = [];
+            const trailCount = 20;
+
+            for (let i = 0; i < trailCount; i++) {
+                const trail = document.createElement('div');
+                trail.className = 'trail';
+                trailContainer.appendChild(trail);
+                trails.push(trail);
+            }
+
+            let mouseX = 0;
+            let mouseY = 0;
+            let trailX = 0;
+            let trailY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                cursor.style.left = mouseX + 'px';
+                cursor.style.top = mouseY + 'px';
+            });
+
+            function updateTrails() {
+                trailX += (mouseX - trailX) * 0.1;
+                trailY += (mouseY - trailY) * 0.1;
+
+                trails.forEach((trail, index) => {
+                    const ratio = (trailCount - index) / trailCount;
+                    const x = trailX - (mouseX - trailX) * ratio;
+                    const y = trailY - (mouseY - trailY) * ratio;
+                    
+                    trail.style.left = x + 'px';
+                    trail.style.top = y + 'px';
+                    trail.style.opacity = ratio * 0.5;
+                });
+
+                requestAnimationFrame(updateTrails);
+            }
+
+            updateTrails();
+        });
+
+        // Feature card hover effekt
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--x', x + 'px');
+                card.style.setProperty('--y', y + 'px');
+            });
+        });
+
+        // Spotlight effekt
+        document.querySelectorAll('.spotlight').forEach(element => {
+            element.addEventListener('mousemove', (e) => {
+                const rect = element.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                element.style.setProperty('--x', `${x}px`);
+                element.style.setProperty('--y', `${y}px`);
+            });
+        });
+
+        // 3D Tilt effekt
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = 
+                    `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            });
+        });
+
+        // Random glitch effekt
+        setInterval(() => {
+            document.querySelectorAll('.glitch').forEach(element => {
+                element.style.animation = 'none';
+                element.offsetHeight;
+                element.style.animation = null;
+            });
+        }, 3000);
+
+        // Matrix rain effekt
+        function createMatrixRain() {
+            const container = document.createElement('div');
+            container.className = 'matrix-container';
+            document.body.appendChild(container);
+
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*';
+            const columns = Math.floor(window.innerWidth / 14);
+
+            for (let i = 0; i < columns; i++) {
+                const character = document.createElement('div');
+                character.className = 'matrix-character';
+                character.style.left = i * 14 + 'px';
+                character.style.animationDuration = Math.random() * 2 + 1 + 's';
+                character.style.animationDelay = Math.random() * 2 + 's';
+                character.textContent = characters[Math.floor(Math.random() * characters.length)];
+                container.appendChild(character);
+
+                setInterval(() => {
+                    character.textContent = characters[Math.floor(Math.random() * characters.length)];
+                }, 1000);
+            }
+        }
+
+        // Ripple effekt
+        document.querySelectorAll('.ripple-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const rect = button.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+
+                button.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Magnetic effekt
+        document.querySelectorAll('.magnetic').forEach(element => {
+            element.addEventListener('mousemove', (e) => {
+                const rect = element.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                element.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+
+            element.addEventListener('mouseleave', () => {
+                element.style.transform = 'translate(0px, 0px)';
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createMatrixRain();
+        });
+
+        // Mobile detection
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        // Disable heavy animations on mobile
+        if (isMobile) {
+            document.querySelectorAll('.matrix-container, .particles, .cursor-trail, .custom-cursor')
+                .forEach(el => el.remove());
+        }
+
+        // Touch event handling
+        document.addEventListener('touchstart', function() {
+            // Enable :active states
+            document.body.addEventListener('touchstart', function() {}, false);
+        }, false);
+
+        // Orientation change handling
+        window.addEventListener('orientationchange', () => {
+            // Reset any necessary styles or animations
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.style.transform = 'none';
+            });
+        });
+
+        // Performance optimization for mobile
+        if (isMobile) {
+            // Reduce particle count
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach((particle, index) => {
+                if (index > 10) particle.remove();
+            });
+
+            // Simplify animations
+            document.querySelectorAll('.animated-element').forEach(el => {
+                el.style.animation = 'none';
+                el.style.transform = 'none';
+            });
+        }
+
+        // Tugmalar uchun yo'nalishlarni tekshirish
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkPath = (path) => {
+                fetch(path)
+                    .then(response => {
+                        if (!response.ok) {
+                            console.warn(`Path not found: ${path}`);
+                            // Agar sahifa topilmasa, asosiy sahifaga yo'naltirish
+                            window.location.href = '/';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Path check error:', error);
+                    });
+            };
+
+            // Sahifalar mavjudligini tekshirish
+            checkPath('/auth/login');
+            checkPath('/auth/register');
+        });
+
+        // Noto'g'ri yo'l tuzatildi
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            if (button.getAttribute('onclick')?.includes('/register')) {
+                button.setAttribute('onclick', "window.location.href='/auth/register'");
+            }
+        });
+
+        // Theme switch funksiyasi
+        function initTheme() {
+            // Local storage'dan theme'ni olish
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            icon.textContent = theme === 'light' ? 'light_mode' : 'dark_mode';
+        }
+
+        // DOMContentLoaded event listener qo'shamiz
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // Theme toggle tugmasiga click event qo'shamiz
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        });
+    </script>
+</body>
+</html>
